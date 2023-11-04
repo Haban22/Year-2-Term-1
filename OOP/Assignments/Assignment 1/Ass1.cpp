@@ -81,6 +81,29 @@ bool PhoneBook::addEntry(string n, string p)
         }
     }
     return 0;
+}
+
+bool PhoneBook::displayEntryAtIndex(int i)
+{
+    if(i >= 0 && i < phoneBooksize)
+    {
+        cout << "Name: " << names[i] << endl << "Phone: " << phones[i];
+        return true;
+    }
+    else
+    {
+        cout << "Invalid Index" << endl;
+        return false;
+    }
+    return false;
+}
+
+void PhoneBook::displayAll()
+{
+    for(int i = 0; i < phoneBooksize; i++)
+    {
+        cout << "Name: " << names[i] << " Phone: " << phones[i] << endl;
+    }
 };
 
 int main()
@@ -106,8 +129,9 @@ int main()
         pb1.addEntry(n,p);
     }
 
+    pb1.displayAll();
 
-    /*
+    
     while(loop)
     {
         cout << "Enter your choice:\n" << "1- Display all phone book\n" << "2- Search for entry/entries by name\n" << "3- Search for entry/entries by phone"
@@ -118,15 +142,37 @@ int main()
         switch (choice)
         {
         case 1:
-
+            pb1.displayAll();
             break;
         case 2:
+            
+            break;
+        case 3:
 
+            break;
+        case 4:
+            int i;
+            cout << "Enter index: ";
+            cin >> i;
+            pb1.displayEntryAtIndex(i);
+            break;
+        case 5:
+
+            break;
+        case 6:
+
+            break;
+        case 7:
+
+            break;
+        case 8:
+            loop = 0;
+            break;
         default:
             break;
         }
     }
-    */
+    
 
 
     return 0;
