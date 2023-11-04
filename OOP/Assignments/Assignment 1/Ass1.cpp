@@ -128,9 +128,6 @@ int main()
         getline(cin , p);
         pb1.addEntry(n,p);
     }
-
-    pb1.displayAll();
-
     
     while(loop)
     {
