@@ -13,7 +13,6 @@ class PhoneBook
     public:
     // Member Functions
      void setSize(int pbs);
-     void copyPB(const PhoneBook&);
      bool addEntry(string n ,string p);
      bool displayEntryAtIndex(int i);
      void displayEntryAtIndices(int* i);
@@ -22,6 +21,7 @@ class PhoneBook
      int findByPhone(string p);
      bool updateNameAt(string n, int i);
      bool updatePhoneAt(string p, int i);
+     void copyPB(const PhoneBook&);
      void clear();
 };
 
@@ -45,11 +45,6 @@ void PhoneBook::setSize(int pbs)
     names = new string[phoneBooksize];
     phones = new string[phoneBooksize];
 };
-
-void PhoneBook::copyPB(const PhoneBook &pb)
-{
-
-}
 
 bool PhoneBook::addEntry(string n, string p)
 {
@@ -98,12 +93,126 @@ bool PhoneBook::displayEntryAtIndex(int i)
     return false;
 }
 
+void PhoneBook::displayEntryAtIndices(int *i)
+{
+    for(int j = 0; j <= phoneBooksize; j++)
+    {
+        if(i[j] == 1)
+        {
+            cout << "Name: " << names[j] << " Phone: " << phones[j] << endl;
+        }
+    }
+}
+
 void PhoneBook::displayAll()
 {
     for(int i = 0; i < phoneBooksize; i++)
     {
         cout << "Name: " << names[i] << " Phone: " << phones[i] << endl;
     }
+}
+
+int *PhoneBook::findByName(string n)
+{
+    int* arr = new int [phoneBooksize];
+    for(int i = 0; i < phoneBooksize; i++)
+    {
+        if(n == names[i])
+        {
+            arr[i] = 1;
+        }
+        else if(n != names[i])
+        {
+            for(int j = 0; j <= n.size(); j++)
+            {
+                if(names[i][j] == n[j])
+                {
+                    arr[i] = 1;
+                    continue;
+                }
+                else
+                {
+                    arr[i] = 0;
+                    break;
+                }
+
+            }
+        }
+        
+    }
+
+    return arr;
+}
+
+int PhoneBook::findByPhone(string p)
+{
+    for(int i; i < phoneBooksize; i++)
+    {
+        if(phones[i] == p)
+        {
+            cout << phones[i] << endl;
+        }
+        else
+        {
+            cout << "phone number not found";
+        }
+    }
+    return 0;
+}
+
+bool PhoneBook::updateNameAt(string n, int i)
+{
+    if(i >= 0 && i < phoneBooksize)
+    {
+        names[i] = n;
+        return true;
+    }
+    else
+    {
+        cout << "Index out of range" << endl;
+        return false;
+    }
+    return false;
+}
+
+bool PhoneBook::updatePhoneAt(string p, int i)
+{
+    if(i >= 0 && i < phoneBooksize)
+    {
+        phones[i] = p;
+        return true;
+    }
+    else
+    {
+        cout << "Index out of range" << endl;
+        return false;
+    }
+    return false;
+}
+
+void PhoneBook::copyPB(const PhoneBook &pb)
+{
+
+    delete[] names;
+    delete[] phones;
+
+    names = new string[phoneBooksize];
+    phones = new string[phoneBooksize];
+
+
+    for(int i = 0; i < phoneBooksize; i++)
+    {
+        names[i] = pb.names[i];
+        phones[i] = pb.phones[i];
+    }
+
+    phoneBooksize = pb.phoneBooksize;
+}
+
+void PhoneBook::clear()
+{
+    delete[] names;
+    delete[] phones;
 };
 
 int main()
@@ -128,13 +237,18 @@ int main()
         getline(cin , p);
         pb1.addEntry(n,p);
     }
-    
+
     while(loop)
     {
+        string input = "";
+        int index = 0;
+
         cout << "Enter your choice:\n" << "1- Display all phone book\n" << "2- Search for entry/entries by name\n" << "3- Search for entry/entries by phone"
         << "4- Find an entry by index\n" << "5- Update name by index\n" << "6- Update phone by index\n" 
         << "7- Copy phone book to another and display entries of the new phone book\n" << "8- Exit\n" << "Choice: ";
         cin >> choice;
+
+        cin.ignore();
 
         switch (choice)
         {
@@ -142,25 +256,39 @@ int main()
             pb1.displayAll();
             break;
         case 2:
-            
+            cout << "Enter name: ";
+            getline(cin , input);
+            pb1.findByName(input);
             break;
         case 3:
-
+            cout << "Enter phone: ";
+            getline(cin , input);
+            pb1.findByPhone(input);
             break;
         case 4:
-            int i;
-            cout << "Enter index: ";
-            cin >> i;
-            pb1.displayEntryAtIndex(i);
+            int *inArr = new int[s];
             break;
         case 5:
-
+            cout << "Enter new name: ";
+            getline(cin , input);
+            cin.ignore();
+            cout << "Enter index: ";
+            cin >> index;
+            cin.ignore();
+            pb1.updateNameAt(input , index);
             break;
         case 6:
-
+            cout << "Enter new phone: ";
+            getline(cin , input);
+            cout << "Enter index: ";
+            cin >> index;
+            cin.ignore();
+            pb1.updatePhoneAt(input , index);
             break;
         case 7:
-
+            PhoneBook pb2;
+            pb1.copyPB(pb2);
+            pb2.displayAll();
             break;
         case 8:
             loop = 0;
@@ -170,7 +298,5 @@ int main()
         }
     }
     
-
-
     return 0;
 };
