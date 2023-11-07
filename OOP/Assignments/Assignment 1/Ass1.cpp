@@ -82,7 +82,7 @@ bool PhoneBook::displayEntryAtIndex(int i)
 {
     if(i >= 0 && i < phoneBooksize)
     {
-        cout << "Name: " << names[i] << endl << "Phone: " << phones[i];
+        cout << "Name: " << names[i] << endl << "Phone: " << phones[i] << endl;
         return true;
     }
     else
@@ -150,11 +150,11 @@ int PhoneBook::findByPhone(string p)
     {
         if(phones[i] == p)
         {
-            cout << phones[i] << endl;
+            cout << "Phone number found for: " << names[i] << endl;
         }
         else
         {
-            cout << "phone number not found";
+            cout << "";
         }
     }
     return 0;
@@ -192,21 +192,16 @@ bool PhoneBook::updatePhoneAt(string p, int i)
 
 void PhoneBook::copyPB(const PhoneBook &pb)
 {
-
-    delete[] names;
-    delete[] phones;
+    phoneBooksize = pb.phoneBooksize;
 
     names = new string[phoneBooksize];
     phones = new string[phoneBooksize];
 
-
-    for(int i = 0; i < phoneBooksize; i++)
+    for(int i; i < phoneBooksize; i++)
     {
         names[i] = pb.names[i];
         phones[i] = pb.phones[i];
     }
-
-    phoneBooksize = pb.phoneBooksize;
 }
 
 void PhoneBook::clear()
@@ -243,7 +238,7 @@ int main()
         string input = "";
         int index = 0;
 
-        cout << "Enter your choice:\n" << "1- Display all phone book\n" << "2- Search for entry/entries by name\n" << "3- Search for entry/entries by phone"
+        cout << "Enter your choice:\n" << "1- Display all phone book\n" << "2- Search for entry/entries by name\n" << "3- Search for entry/entries by phone\n"
         << "4- Find an entry by index\n" << "5- Update name by index\n" << "6- Update phone by index\n" 
         << "7- Copy phone book to another and display entries of the new phone book\n" << "8- Exit\n" << "Choice: ";
         cin >> choice;
@@ -266,12 +261,32 @@ int main()
             pb1.findByPhone(input);
             break;
         case 4:
-            int *inArr = new int[s];
+            bool ic;
+            cout << "Type 0 for single index and 1 for multiple indices: ";
+            cin >> ic;
+            if(!ic)
+            {
+                cout << "Enter index: ";
+                cin >> index;
+                cin.ignore();
+                pb1.displayEntryAtIndex(index);
+            }
+            else
+            {
+                int *kj = new int[s];
+                cout << "Enter array of 0's and 1's of size: " << s << ": ";
+                for(int i = 0; i < s; i++)
+                {
+                    cin >> kj[i];
+                    cin.ignore();
+                }
+                pb1.displayEntryAtIndices(kj);
+                delete[] kj;
+            }
             break;
         case 5:
             cout << "Enter new name: ";
             getline(cin , input);
-            cin.ignore();
             cout << "Enter index: ";
             cin >> index;
             cin.ignore();
@@ -287,11 +302,12 @@ int main()
             break;
         case 7:
             PhoneBook pb2;
-            pb1.copyPB(pb2);
+            pb2.copyPB(pb1);
             pb2.displayAll();
             break;
         case 8:
             loop = 0;
+            pb1.clear();
             break;
         default:
             break;
